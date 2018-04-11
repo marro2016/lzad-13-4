@@ -1,20 +1,40 @@
-function time() {
+function timeConvert(uptime) {
+  var time = {},
+    seconds = uptime % 60,
+    minutes = Math.floor(uptime / 60),
+    hours;
 
-  process.stdout.write('podaj czas w sekundach? \n');
-  process.stdin.on('data', function(number) {
-    var userInput = number.toString().trim();
-    h = Math.floor(number / 3600);
-    m = Math.floor(number % 3600 / 60);
-    s = number % 60;
-    console.log('podałeś czas: ' + h + ' godzin ' + m + ' minut ' + s + ' sekund');
-  });
+  if (minutes > 60) {
+    hours = Math.floor(minutes / 60);
+    var remainingMinutes = minutes - (hours * 60);
+    time = {
+      hr: hours,
+      min: remainingMinutes,
+      sec: seconds
+    };
+    timeToString(time);
+  } else {
+    time = {
+      hr: hours,
+      min: minutes,
+      sec: seconds
+    };
+    timeToString(time);
+  }
+
+  function timeToString(time) {
+    var string = '';
+    for (var item in time) {
+      if (time[item] < 10) {
+        string += '0' + time[item] + ':';
+      } else if (time[item] === undefined) {
+        string += '00:';
+      } else {
+        string += time[item] + ':';
+      }
+    }
+    console.log('Uptime: ' + string.slice(0, -1) + ' [hr/min/sec]');
+  }
 }
-exports.time = time;
 
-function timeOfWork(operate) {
-  var acting = (Math.floor(operate / 3600) % 24) + ' godz. ' + (Math.floor(operate / 60) % 60) + ' min. ' + Math.floor(operate % 60) + ' sek.';
-
-  return acting;
-}
-exports.print = timeOfWork;
-
+exports.print = timeConvert;
